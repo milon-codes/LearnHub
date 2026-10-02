@@ -146,39 +146,13 @@ export async function GET(request) {
     // ========================================
     // 8. Price Filter
     // ========================================
-
     if (price === "free") {
-      filter.$or = [
-        ...(filter.$or || []),
-        {
-          price: 0,
-        },
-        {
-          discountPrice: 0,
-        },
-      ];
+      filter.$and = [...(filter.$and || []), { price: 0 }];
     }
 
     if (price === "paid") {
-      filter.$and = [
-        ...(filter.$and || []),
-        {
-          $or: [
-            {
-              price: {
-                $gt: 0,
-              },
-            },
-            {
-              discountPrice: {
-                $gt: 0,
-              },
-            },
-          ],
-        },
-      ];
+      filter.$and = [...(filter.$and || []), { price: { $gt: 0 } }];
     }
-
     // ========================================
     // 9. Min / Max Price
     // ========================================
@@ -296,8 +270,8 @@ export async function GET(request) {
         category,
         level,
         price,
-        minPrice: minPriceParam !== null ? minPrice : null,
-        maxPrice: maxPriceParam !== null ? maxPrice : null,
+        minPrice: minPriceParam,
+        maxPrice: maxPriceParam,
         sort,
       },
     });

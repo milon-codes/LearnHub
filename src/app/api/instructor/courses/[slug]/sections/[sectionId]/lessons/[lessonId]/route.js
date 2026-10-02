@@ -153,7 +153,7 @@ export async function PUT(request, { params }) {
 
     const slug = resolvedParams?.slug;
     const sectionId = resolvedParams?.sectionId;
-    const lessonId = resolvedParams?.lessonsId;
+    const lessonId = resolvedParams?.lessonId;
 
     console.log("Update Lesson Params:", slug, sectionId, lessonId);
 
@@ -350,7 +350,7 @@ export async function DELETE(request, { params }) {
 
     const slug = resolvedParams?.slug;
     const sectionId = resolvedParams?.sectionId;
-    const lessonId = resolvedParams?.lessonsId;
+    const lessonId = resolvedParams?.lessonId;
 
     console.log("Delete Lesson Params:", slug, sectionId, lessonId);
 

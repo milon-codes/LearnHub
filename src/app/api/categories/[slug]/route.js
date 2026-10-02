@@ -44,6 +44,21 @@ export async function GET(request, { params }) {
 
 export async function PATCH(request, { params }) {
   try {
+        const session = await auth();
+
+    if (!session) {
+      return Response.json(
+        { success: false, message: "You must be logged in." },
+        { status: 401 },
+      );
+    }
+
+    if (session.user?.role !== "admin") {
+      return Response.json(
+        { success: false, message: "Only admins can manage categories." },
+        { status: 403 },
+      );
+    }
     const { slug } = await params;
     const body = await request.json();
 
@@ -152,6 +167,22 @@ export async function PATCH(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
+        const session = await auth();
+
+    if (!session) {
+      return Response.json(
+        { success: false, message: "You must be logged in." },
+        { status: 401 },
+      );
+    }
+
+    if (session.user?.role !== "admin") {
+      return Response.json(
+        { success: false, message: "Only admins can manage categories." },
+        { status: 403 },
+      );
+    }
+    
     const { slug } = await params;
 
     await connectDB();

@@ -1,8 +1,25 @@
+import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
 import Category from "@/models/Category";
 
 export async function POST(request) {
   try {
+        const session = await auth();
+
+    if (!session) {
+      return Response.json(
+        { success: false, message: "You must be logged in." },
+        { status: 401 },
+      );
+    }
+
+    if (session.user?.role !== "admin") {
+      return Response.json(
+        { success: false, message: "Only admins can create categories." },
+        { status: 403 },
+      );
+    }
+
     const body = await request.json();
 
     const {
@@ -88,11 +105,19 @@ export async function POST(request) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
     await connectDB();
 
-    const categories = await Category.find()
+    const { searchParams } = new URL(request.url);
+
+    const filter = {};
+
+    if (searchParams.get("active") === "true") {
+      filter.isActive = true;
+    }
+
+    const categories = await Category.find(filter)
       .sort({ order: 1, createdAt: -1 })
       .lean();
 
@@ -108,10 +133,7 @@ export async function GET() {
     console.error("Get Categories Error:", error);
 
     return Response.json(
-      {
-        success: false,
-        message: "Something went wrong.",
-      },
+      { success: false, message: "Something went wrong." },
       { status: 500 },
     );
   }

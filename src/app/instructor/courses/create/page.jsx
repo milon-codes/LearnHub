@@ -352,15 +352,20 @@ export default function CreateCoursePage() {
 
                       <Select
                         value={formData.category}
+                        items={categories
+                          .filter((category) => category.isActive)
+                          .map((category) => ({
+                            value: category._id,
+                            label: category.name,
+                          }))}
                         onValueChange={(value) =>
                           setFormData((prev) => ({
                             ...prev,
                             category: value,
                           }))
                         }
-                        required
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue
                             placeholder={
                               loadingCategories
@@ -370,7 +375,7 @@ export default function CreateCoursePage() {
                           />
                         </SelectTrigger>
 
-                        <SelectContent>
+                        <SelectContent alignItemWithTrigger={false}>
                           {categories
                             .filter((category) => category.isActive)
                             .map((category) => (
